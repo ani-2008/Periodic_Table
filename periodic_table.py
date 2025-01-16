@@ -67,13 +67,7 @@ def change_dict_json(obj):
         
     return (((((json.dumps(new_dict,indent=3)).replace("{","")).replace("}","")).replace("[","")).replace("]","")).replace(",","")
 
-def remove_string_count(string):
-    
-    for char in string:
-        if char.isdigit():
-            print(type(char))
-            string.replace(char,"")
-    return string
+
 if len(sys.argv) == 2 and sys.argv[1].lower().strip() == "display":
     print(change_dict_json(todo_dict))
 def main():
