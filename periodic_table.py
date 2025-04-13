@@ -1,163 +1,34 @@
 import json
-import sys
-with open("list.json") as f:
-    data = f.read()
 
-todo_dict = json.loads(data)
+option = input("How do you want to search via (atomic number / atomic name) ")
 
-count = 0
-def check_through_taskes(count,task,label,status):
-    for i in range(count):
-        if str(i) not in todo_dict[label]:
-            continue
-        elif task == todo_dict[label][str(i)][0] and status != todo_dict[label][str(i)][1]:
-            return True
+
+
+def elements():
+    with open("elements.json") as f:
+      elements_json = f.read()
+    
+    elements = json.loads(elements_json)
+    if option == "atomic number":
+        element_no = int(input("Enter the atomic number of the element you want to access: "))
+        if element_no <= 118:
+            print("The element is",elements[str(element_no)])
         else:
-            return False
-
-def delete_task(choice):
-    del_task = False
-    del_status = False
-    
-    string_count = "0"
-    if choice == "y":
-        
-        if todo_dict=={}:
-            print("List is empty")
-            return False
-        else:
-            ask_label = input("Label:").strip()
-            if ask_label in todo_dict:
-                ask_task = input("Task:").strip()
-                for i in todo_dict[ask_label].keys():
-                    
-                    if ask_task in todo_dict[ask_label][i]:
-                        string_count = i
-                        del_task = todo_dict[ask_label][i][0]
-                        del_status =  todo_dict[ask_label][i][1]
-                        
-                        break
-                    else:
-                        continue
-
-            else:
-                print("Label not found")
-                return False
+            print("Invalid atomic number")
 
 
-    if del_task and del_status and string_count:
-        
-        del todo_dict[ask_label][string_count][0]
-        del todo_dict[ask_label][string_count][0]
-    
-    
-    if todo_dict[ask_label][string_count] == []:
-        del todo_dict[ask_label][string_count]
-    if todo_dict[ask_label] == {}:
-        del todo_dict[ask_label]
-    
-    return todo_dict,string_count
-
-
-def change_dict_json(obj):
-    new_dict = {}
-    
-    for i in obj:
-        new_dict[i] = list(obj[i].values())
-        
-    return (((((json.dumps(new_dict,indent=3)).replace("{","")).replace("}","")).replace("[","")).replace("]","")).replace(",","")
-
-
-if len(sys.argv) == 2 and sys.argv[1].lower().strip() == "display":
-    print(change_dict_json(todo_dict))
-def main():
-    global todo_dict
-    global count
-    global string_count
-    string_count = "0"
-    while True:
-        
-        print("To exit type exit")
-        print("To display type display")
-        choice = input("Do you want to delete any task ? (y/n)").lower()
-        if choice == "y":
-            try:
-                todo_dict,string_count = delete_task('y')
-            except TypeError:
-                todo_dict = todo_dict
-                string_count = "0"
-            print(change_dict_json(todo_dict))
-            jsonTodo_dict = json.dumps(todo_dict)
-            with open("list.json","w") as f:
-                data = f.write(jsonTodo_dict)
-            with open("list.json") as f:
-                data = f.read()
-            todo_dict = json.loads(data)
+    elif option == "atomic name":
+        e_n = input("Enter element name ").title()
+        e_symbol = input("Enter element symbol ").title()
+        e_name = e_symbol + " " + e_n
+       
+        for e in iter(elements):
             
-        elif choice == "n":
-            choice = input("Do you want to add any task ?\nIf no then you can see your current tasks (y/n)").lower()
-            if choice == "y":
-                label = input("Label: ").strip()
-                if label.lower() == "exit":
-                    break
-                elif label.lower() == "display":
-                    
-                    print(change_dict_json(todo_dict))
-                    continue
-                task = input("Task: ").strip()
-                if task.lower() == "exit":
-                    break
-                elif task.lower() == "display":
-                    print(change_dict_json(todo_dict))
-                    continue
-                status = input("Status: ").strip()
-                if status.lower() == "exit":
-                    break
-                elif status.lower() == "display":
-                    print(change_dict_json(todo_dict))
-                    continue
-                if label not in todo_dict:
-                    count = 0
-                    todo_dict.update({label:{str(count):[task,status]}})
-                    count +=1
-                
-                else:
-                    
-                    count = int(string_count)
-                    if count != 0:
-                        
-                        if check_through_taskes(count,task,label,status):
-                            todo_dict[label].update({str(count-1):[task,status]})
-                            
-                        else:
-                            todo_dict[label].update({str(count):[task,status]})
-                            count+=1
-                            
-                    else:
-                        if str(count) not in todo_dict[label]:
-                            todo_dict[label].update({str(count):[task,status]})
-                        elif task in todo_dict[label][str(count)]:
-                            todo_dict[label].update({str(count):[task,status]})
-                            count+=1
-                        else:
-                            count+=1
-                            todo_dict[label].update({str(count):[task,status]})
-                string_count = str(int(string_count) + 1)
-            elif choice == "n":
-                print(change_dict_json(todo_dict))
-                continue
-            elif choice == "exit":
-                break
-            elif choice == "display":
-                print(change_dict_json(todo_dict))
-                continue
-        elif choice == "exit":
-            break
-        elif choice == "display":
-            print(change_dict_json(todo_dict))
-            break        
+            if e_name ==elements[e]:
+                x = e
+        print("The atomic number is ",x)
+        
+    else:
+        print("Invalid work")
 
-main()
-jsonTodo_dict = json.dumps(todo_dict)
-with open("list.json","w") as f:
-    data = f.write(jsonTodo_dict)
+elements()
